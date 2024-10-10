@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PwdGeneratDecryptor:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PwdGeneratDecryptor_jar</output-path>
+    <root id="archive" name="PwdGeneratDecryptor.jar">
+      <element id="module-output" name="PwdGeneratDecryptor" />
+    </root>
+  </artifact>
+</component>
