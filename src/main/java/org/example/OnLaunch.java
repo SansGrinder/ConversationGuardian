@@ -82,13 +82,16 @@ public class OnLaunch {
 
         // Prompt the user whether to copy the output to their clipboard
         // I mean chances are they will choose to copy but what if they had something important in their clipboard?
-
-        StringSelection stringSelection = new StringSelection(finalText);
+        if (GUIs.optionPopUp("Do you want to save the result to clipboard?\nThis will override your clipboard!","Copy to clipboard?")==0){
+            StringSelection stringSelection = new StringSelection(finalText);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+            GUIs.msgPopUp("Your encrypted text is now copied to your clipboard!","Done!","plain text");
+        } else {
+            GUIs.msgPopUp("Your encrypted text is:\n"+finalText,"Done!","plain text");
+        }
         Runner.programRunProgress=2;
         // 2 for after encryption
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection, null);
-        GUIs.msgPopUp("Your encrypted text is now copied to your clipboard!","Done!","plain text");
         Runner.programEndedExpectedly =true;
     }
     private static String encrypt(String s, String enteredIndex) {
@@ -155,15 +158,18 @@ public class OnLaunch {
         }
         String unencryptedText=decrypt(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
 
-        // Add an if-else statement that asks the user whether to copy to their clipboard
-
-        StringSelection stringSelection = new StringSelection(unencryptedText);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(stringSelection, null);
-        GUIs.msgPopUp("Your result is\n"+(char)34+unencryptedText+(char)34+"\n(full text copied to clipboard)","Result","plain text");
+        // An if-else statement that asks the user whether to copy to their clipboard
+        if (GUIs.optionPopUp("Do you want to save the result to clipboard?\nThis will override your clipboard!","Copy to clipboard?")==0){
+            StringSelection stringSelection = new StringSelection(unencryptedText);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+            GUIs.msgPopUp("Your result is: \n"+(char)34+unencryptedText+(char)34+"\n(full text copied to clipboard)","Result","plain text");
+        } else {
+            GUIs.msgPopUp("Your result is: \n"+(char)34+unencryptedText+(char)34,"Result","plain text");
+        }
         Runner.programRunProgress=6;
         // 6 is for after decryption
-        Runner.programEndedExpectedly =true;
+        Runner.programEndedExpectedly=true;
     }
     private static String decrypt(String s, long index) {
         index=getIndex(String.valueOf(index));
