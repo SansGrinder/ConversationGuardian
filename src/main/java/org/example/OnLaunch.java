@@ -155,7 +155,7 @@ public class OnLaunch {
         }
         String unencryptedText=decrypt(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
 
-        // Add a if-else statement that asks the user whether or not to copy to their clipboard
+        // Add an if-else statement that asks the user whether to copy to their clipboard
 
         StringSelection stringSelection = new StringSelection(unencryptedText);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
