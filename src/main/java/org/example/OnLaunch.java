@@ -1,175 +1,50 @@
 package org.example;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.io.File;
-import java.io.IOException;
 public class OnLaunch {
+    // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
     public final static long time=System.currentTimeMillis();
-    public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','9','k','l','$','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"',']','?','[',':','(','V','<','n','c','U','!','B','-','x',' ',';','q','w','p',',','e','Q','d','3','1','4','/'};
-    public static void main(String[] args) throws IOException {
-        usefulFunctions f = new usefulFunctions();
-        f.clearScreen(100);
-        System.out.println(time);
-        int a=Integer.parseInt(String.valueOf((int)recurring(time)*1000000000*10));
-        a%=26;
-        if (a<0){
-            a=Math.abs(a);
-        } else if (a==0){
-            a=2;
-        }
-        System.out.println(a);
+    // final char[] that stores the most common characters you can see on a keyboard
+    public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','$','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
+    public static void launch() throws Exception {
         int response=-1;
         while (response==-1){
-            response=f.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a file", "Encrypt"});
+            response=GUIs.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a PDF", "Encrypt"});
         }
-        if (response==2){
-            String testString=null;
-            while (testString == null){
-                testString=f.textPopUp("Enter your text here: ",null,"(Don't include Chinese Characters/punctuations or weird symbols!)");
+        switch (response){
+            case 2->{ // Encrypt Chosen
+                Runner.programRunProgress=1;
+                // 1 for Encryption
+                encryptionMethod();
             }
-            try {
-                System.out.println(encrypt(testString,a));
-            } catch (NullPointerException e){
-                f.msgPopUp("Invalid Characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text",null);
-                System.exit(0);
+            case 1-> PDFEncryptDecrypt.start(); // User want to select a PDF
+            case 0->{ // Decrypt Chosen
+                Runner.programRunProgress=5;
+                // 5 is for Before Decryption
+                decryptionMethod();
             }
-            f.msgPopUp("Your encrypted text is now copied to your clipboard!","Done!","plain text",null);
-            StringSelection stringSelection = new StringSelection(time+"\n"+encrypt(testString,a));
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-        } else if (response==1){
-            boolean doneWithGUI=false;
-            boolean doneWithInput=false;
-            String directory="";
-            while (!(doneWithGUI||doneWithInput)){
-                while (!doneWithGUI){
-                    directory=selectFile();
-                    if (directory==null){
-                        a=f.optionPopUp("You didn't select a file, or an error has occurred!","Failed to get file!",new String[]{"Manually Input Directory","Try Again"});
-                        if (a!=1){
-                            break;
-                        }
-                    } else {
-                        boolean txt=isTxtFile(directory);
-                        if (!txt){
-                            int p=f.optionPopUp("Your selected file was not in .txt format!","Wrong file?",new String[]{"Create a .txt file at my directory","Select another file"});
-                            if (p!=1){
-                                String[] help=directory.split("/");
-                                String[] helper=new String[help.length-1];
-                                System.arraycopy(help,0,helper,0,help.length-1);
-                                StringBuilder parent= new StringBuilder();
-                                int in=0;
-                                for (String S:helper){
-                                    parent.append("/");
-                                    parent.append(helper[in]);
-                                    in++;
-                                }
-                                File file = new File(String.valueOf(parent), "Plain Text File.txt");
-                                if (!file.exists()){
-                                    file.createNewFile();
-                                } else {
-                                    usefulFunctions.overrideFile(String.valueOf(parent),"");
-                                }
-                                f.msgPopUp("DO NOT CLOSE THIS WINDOW\nAn empty .txt file has been created at your selected directory\nPlease now open and paste the text to be decrypted into the .txt file, without renaming it or moving it to another directory\nClosing or pressing OK on this window will assume you finished","DO NOT CLOSE THIS WINDOW","warning",null);
-                                doneWithGUI=true;
-                            }
-                        } else {
-                            doneWithGUI=true;
-                        }
-                    }
-                }
-                while (!doneWithInput&&!doneWithGUI){
-                    String t;
-                    do {
-                        t = f.textPopUp("Input your directory below: ", "Directory Input", "Example: /Users/jiahua.zhang/Downloads/thisIsYourFileName.txt");
-                    } while (t == null);
-                    if (isTxtFile(t)){
-                        directory=t;
-                        doneWithInput=true;
-                    } else {
-                        a=f.optionPopUp("You didn't select a txt file, or an error has occurred!","Failed to get file!",new String[]{"Select a file","Try Again"});
-                        if (a!=1){
-                            break;
-                        }
-                    }
-                }
+            default->{
+                // Logically impossible to reach
+                // Generating silent crash report
+                GUIs.msgPopUp("Error! Could not read your response!","ERROR","error");
+                Runner.requestSilenceCrashReport=true;
+                throw new Exception("Impossible user response ("+response+") in OnLaunch - Main Method - switch_case block");
             }
-            String[] data=usefulFunctions.readSavedData(directory);
-            String[] content = new String[0];
-            String[] decryptedArray = new String[0];
-            try{
-                content=new String[data.length-1];
-                decryptedArray=new String[data.length-1];
-            } catch (NullPointerException ignored){
-                f.msgPopUp("An Error Has Occurred: Couldn't read anything from your selected file! Is the file empty?","No Contents Read","warning",null);
-                System.exit(0);
-            }
-            double time=0;
-            try{
-                time=Double.parseDouble(data[0]);
-            } catch (Exception ignored){
-                f.msgPopUp("Wrong Input Format! Launch the program again to try again","Bad Input!","error",null);
-                System.exit(0);
-            }
-            System.arraycopy(data,1,content,0,data.length-1);
-            int index=Integer.parseInt(String.valueOf((int) recurring(time)*1000000000*10));
-            index%=26;
-            if (index<0){
-                index=Math.abs(index);
-            }
-            boolean containsIllegalCharacters=false;
-            int count=0;
-            for (String s:content){
-                try {
-                    decryptedArray[count]=decrypt(s, index);
-                } catch (NullPointerException ignored){
-                    containsIllegalCharacters=true;
-                    break;
-                }
-                count++;
-            }
-            if (containsIllegalCharacters){
-                f.msgPopUp("Why are you trying to hack the system?","=(","error",null);
-                System.exit(0);
-            } else {
-                StringBuilder returnValue=new StringBuilder();
-                for (String st:decryptedArray){
-                    returnValue.append(st).append("\n");
-                }
-                usefulFunctions.overrideFile(directory,String.valueOf(returnValue));
-            }
-        } else {
-            String input=f.textPopUp("Enter your input here: ","Input");
-            if (input.length()<15){
-                f.msgPopUp("Wrong Input Format! Launch the program again to try again","Bad Input!","error",null);
-                System.exit(0);
-            }
-            StringBuilder subString= new StringBuilder();
-            StringBuilder temp= new StringBuilder();
-            for (int i=0;i<13;i++){
-                temp.append(input.charAt(i));
-            }
-            long time=Long.parseLong(temp.toString());
-            int index=Integer.parseInt(String.valueOf((int) recurring(time)*1000000000*10));
-            for (int i=14;i<input.length();i++){
-                subString.append(input.charAt(i));
-            }
-            index%=26;
-            if (index<0){
-                index=Math.abs(index);
-            }
-            String decrypted=decrypt(subString.toString(),index);
-            System.out.println(decrypted);
-            StringSelection stringSelection = new StringSelection(decrypted);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
-            f.msgPopUp("Your result is\n"+(char)34+decrypted+(char)34+"\n(full text copied to clipboard)","Result","plain text",null);
         }
     }
-    public static double recurring(double a) {
+    private static int getIndex(String input){
+        long id=Long.parseLong(input);
+        id= (long)recurring(id);
+        id%=dictionary.length;
+        if (id==0){
+            id=2;
+        } else if (id<0){
+            id=Math.abs(id);
+        }
+        return (int) id;
+    }
+    private static double recurring(double a) {
         if (a > 1145) {
             return a / 1145;
         } else {
@@ -181,7 +56,38 @@ public class OnLaunch {
             return recurring(a * 11.45141919810);
         }
     }
-    public static String encrypt(String s, int index) {
+    private static void encryptionMethod(){
+        String textString=null;
+        while (textString == null){
+            textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
+        }
+        try { // To see if I can encrypt the text without errors
+            System.out.println(encrypt(textString,String.valueOf(time)));
+            // I can also not System.out.println() the message but adding so makes debugging easier
+        } catch (NullPointerException e){
+            GUIs.msgPopUp("Invalid Characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
+            Runner.programEndedExpectedly =true;
+            System.exit(0);
+        }
+        // Encrypting for the first time:
+        String firstEncryption=time+"Ø"+encrypt(textString,String.valueOf(time));
+        int newIndex=0;
+        for (int i=0;i<firstEncryption.length();i++){
+            // Adding characters' Unicode index to make new index
+            // E.g. int a='a'+'¿'; a=288 ('a'=97,'¿'=191)
+            newIndex+=firstEncryption.charAt(i);
+        }
+        // Encrypting for the second time
+        StringSelection stringSelection = new StringSelection(newIndex+"Ø"+encrypt(firstEncryption, String.valueOf(newIndex)));
+        Runner.programRunProgress=2;
+        // 2 for after encryption
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+        GUIs.msgPopUp("Your encrypted text is now copied to your clipboard!","Done!","plain text");
+        Runner.programEndedExpectedly =true;
+    }
+    private static String encrypt(String s, String enteredIndex) {
+        int index=getIndex(enteredIndex);
         char[] encrypted = new char[s.length()];
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
@@ -197,51 +103,84 @@ public class OnLaunch {
                 char encryptedChar = dictionary[encryptedIndex];
                 encrypted[i] = encryptedChar;
             } else {
-                throw new NullPointerException("=("); // Return null if character is not found in the dictionary
+                throw new NullPointerException("Character ("+c+") not found within dictionary!"); // throw new Exception if character is not found in the dictionary
             }
         }
         return new String(encrypted);
     }
-    public static String decrypt(String s, int index) {
+    private static void decryptionMethod(){
+        String input=GUIs.textPopUp("Enter your input here: ","Input");
+        if (input == null){
+            GUIs.msgPopUp("You didn't enter anything!","Bad Input!","error");
+            Runner.programEndedExpectedly=true;
+            System.exit(0);
+        }
+        String[] separatedInput=input.split("Ø");
+        if (separatedInput.length<2){
+            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
+            Runner.programEndedExpectedly=true;
+            System.exit(0);
+        }
+        try {
+            System.out.println(Integer.parseInt(separatedInput[0]));
+        } catch (NumberFormatException e){
+            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
+            Runner.requestSilenceCrashReport=true;
+            throw e;
+        }
+        StringBuilder subString=new StringBuilder();
+        for (int i=1;i<separatedInput.length;i++){
+            subString.append(separatedInput[i]);
+        }
+        // Decrypting first layer:
+        String decryptedText=decrypt(subString.toString(), Long.parseLong(separatedInput[0]));
+        System.out.println(decryptedText);
+        // Decrypting second layer:
+        String[] separatedDecryptedText=decryptedText.split("Ø");
+        try {
+            System.out.println(Long.parseLong(separatedDecryptedText[0]));
+        } catch (NumberFormatException e){
+            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
+            Runner.requestSilenceCrashReport=true;
+            throw e;
+        }
+        StringBuilder alsoSubString=new StringBuilder();
+        for (int i=1;i<separatedDecryptedText.length;i++){
+            alsoSubString.append(separatedDecryptedText[i]);
+        }
+        String unencryptedText=decrypt(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
+        StringSelection stringSelection = new StringSelection(unencryptedText);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(stringSelection, null);
+        GUIs.msgPopUp("Your result is\n"+(char)34+unencryptedText+(char)34+"\n(full text copied to clipboard)","Result","plain text");
+        Runner.programRunProgress=6;
+        // 6 is for after decryption
+        Runner.programEndedExpectedly =true;
+    }
+    private static String decrypt(String s, long index) {
+        index=getIndex(String.valueOf(index));
         char[] decryptedArray = new char[s.length()];
-        for (int i = 0; i < s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {// Iterate through each character of the string
             char c = s.charAt(i);
             int n = -1;
-            for (int j = 0; j < dictionary.length; j++) {
-                if (dictionary[j] == c) {
+            for (int j = 0; j < dictionary.length; j++) { // Iterates through each element of the array
+                if (dictionary[j] == c) { // if found, n=array_index of the element
                     n = j;
                     break;
                 }
             }
             if (n != -1) {
-                int decryptedIndex = (n - index + dictionary.length) % dictionary.length;
+                // This branch means found the character, now replacing with new character controlled by index
+                int decryptedIndex = (int) ((n - index + dictionary.length) % dictionary.length);
                 char decryptedChar = dictionary[decryptedIndex];
                 decryptedArray[i] = decryptedChar;
             } else {
-                throw new NullPointerException("=("); // Return null if character is not found in the dictionary
+                throw new NullPointerException("Character ("+c+") is not found in the dictionary!");
+                // Throws a NullPointerException if the character is not found in the dictionary
+                // Only allows characters within the dictionary within input
             }
         }
+        // Return type is String, so we return a new String().
         return new String(decryptedArray);
-    }
-    public static boolean isTxtFile(String filePath) {
-        File file = new File(filePath);
-        if (file.exists() && file.isFile()) {
-            String fileName = file.getName();
-            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-            return fileExtension.equalsIgnoreCase("txt");
-        }
-        return false;
-    }
-    public static String selectFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
-        fileChooser.setFileFilter(filter);
-
-        int result = fileChooser.showOpenDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
-            return selectedFile.getPath();
-        }
-        return null;
     }
 }
