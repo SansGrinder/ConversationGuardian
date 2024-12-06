@@ -78,7 +78,12 @@ public class OnLaunch {
             newIndex+=firstEncryption.charAt(i);
         }
         // Encrypting for the second time
-        StringSelection stringSelection = new StringSelection(newIndex+"Ø"+encrypt(firstEncryption, String.valueOf(newIndex)));
+        String finalText = newIndex+"Ø"+encrypt(firstEncryption, String.valueOf(newIndex));
+
+        // Prompt the user whether to copy the output to their clipboard
+        // I mean chances are they will choose to copy but what if they had something important in their clipboard?
+
+        StringSelection stringSelection = new StringSelection(finalText);
         Runner.programRunProgress=2;
         // 2 for after encryption
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -149,6 +154,9 @@ public class OnLaunch {
             alsoSubString.append(separatedDecryptedText[i]);
         }
         String unencryptedText=decrypt(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
+
+        // Add a if-else statement that asks the user whether or not to copy to their clipboard
+
         StringSelection stringSelection = new StringSelection(unencryptedText);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);
