@@ -9,7 +9,10 @@ public class Runner {
     public static boolean userClosedWindow = false;
     public static void main(String[] args){
         addShutDownHook();
-        runApp();
+        while (!userClosedWindow){
+            runApp();
+            resetInstanceVariables();
+        }
     }
     private static void runApp(){
         try {
@@ -31,10 +34,6 @@ public class Runner {
                 System.out.println("Emergency shutdown hook executed!");
                 GUIs.programCrashed(); // Requests the GUIs Class to show the alert, then error logging
                 programEndedExpectedly=true;
-            } else if (!userClosedWindow){
-                resetInstanceVariables();
-                runApp();
-                addShutDownHook();
             }
         }));
     }

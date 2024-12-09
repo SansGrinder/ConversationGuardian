@@ -15,7 +15,6 @@ public class GUIs { // Sorted by order of execution
     public static void expectedProgramCrash(Exception e){
         CrashExport.generateCrashReport(Runner.programRunProgress, e);
         Runner.programEndedExpectedly=true;
-        System.exit(0);
     } // For silent crash reports
 
     // Below this point are JOptionPane "shortcut" methods

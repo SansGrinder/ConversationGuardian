@@ -55,9 +55,12 @@ public class MainBranch {
         try { // To see if I can encrypt the text without errors
             System.out.println(encryptString(textString,String.valueOf(currentTime)));
             // I can also not System.out.println() the message but adding so makes debugging easier
+            if (textString.isEmpty()){
+                throw new NullPointerException("Empty input");
+            }
         } catch (NullPointerException e){
-            GUIs.msgPopUp("Invalid Characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
-            Runner.programEndedExpectedly =true;
+            GUIs.msgPopUp(e.getMessage().contains("Empty input")?"You didn't enter anything!\nRelaunch the program to try again, or contact the programmer if you believe this is a mistake.":"Invalid characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
+            Runner.programEndedExpectedly=true;
             System.exit(0);
         }
         // Encrypting for the first time:
