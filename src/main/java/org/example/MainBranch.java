@@ -4,9 +4,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 public class MainBranch {
     // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
-    public final static long currentTime =System.currentTimeMillis();
+    public final static long currentTime=System.currentTimeMillis();
     // final char[] that stores the most common characters you can see on a keyboard
-    public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','$','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
+    public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
     public static void launch() throws Exception {
         int response=GUIs.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a PDF", "Encrypt"});
         if (response==-1){
@@ -37,7 +37,6 @@ public class MainBranch {
     }
     private static int getIndex(String input){
         long id=Long.parseLong(input);
-        id= (long)recurring(id);
         id%=dictionary.length;
         if (id==0){
             id=2;
@@ -45,18 +44,6 @@ public class MainBranch {
             id=Math.abs(id);
         }
         return (int) id;
-    }
-    private static double recurring(double a) {
-        if (a > 1145) {
-            return a / 1145;
-        } else {
-            a *= 3;
-            a -= 5;
-            a *= 5;
-            a += 3;
-            a /= 7.1;
-            return recurring(a * 11.45141919810);
-        }
     }
     private static void encryptionMethod(){
         String textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
@@ -96,7 +83,7 @@ public class MainBranch {
         }
         Runner.programRunProgress=2;
         // 2 for after encryption
-        Runner.programEndedExpectedly =true;
+        Runner.programEndedExpectedly=true;
     }
     private static String encryptString(String s, String enteredIndex) {
         int index=getIndex(enteredIndex);
