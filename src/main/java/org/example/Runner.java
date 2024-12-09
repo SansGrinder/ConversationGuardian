@@ -6,6 +6,7 @@ public class Runner {
     // This boolean values determines if a program ended as expected
     public static boolean requestSilenceCrashReport = false;
     // This boolean determines whether the error is impacting user experience, false for fatal, true for minor
+    public static boolean userClosedWindow = false;
     public static void main(String[] args){
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (!programEndedExpectedly){
@@ -13,10 +14,15 @@ public class Runner {
                 System.out.println("Emergency shutdown hook executed!");
                 GUIs.programCrashed(); // Requests the GUIs Class to show the alert, then error logging
                 programEndedExpectedly=true;
+            } else if (!userClosedWindow){
+                runApp();
             }
         }));
+        runApp();
+    }
+    private static void runApp(){
         try {
-            OnLaunch.launch(); // The main program
+            MainBranch.launch(); // The main program
         } catch (Exception e){
             if (requestSilenceCrashReport) {
                 GUIs.expectedProgramCrash(e);

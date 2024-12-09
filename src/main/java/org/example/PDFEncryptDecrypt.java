@@ -36,6 +36,11 @@ public class PDFEncryptDecrypt {
                 String filePath = selectedFile.getAbsolutePath();
                 // Encrypting the PDF
                 String password = GUIs.textPopUp("Please enter password for the PDF: ","Set a password");
+                if (password==null){
+                    Runner.userClosedWindow=true;
+                    Runner.programEndedExpectedly=true;
+                    System.exit(0);
+                }
                 encryptPDF(filePath, password);
                 Runner.programRunProgress=4;
                 // 4 for after PDF Encryption
@@ -59,18 +64,19 @@ public class PDFEncryptDecrypt {
             StandardProtectionPolicy spp = new StandardProtectionPolicy(password, password, ap);
             document.protect(spp);
             JFileChooser fileChooser = new JFileChooser();
-	    fileChooser.setDialogTitle("Select a location to save to");
+	        fileChooser.setDialogTitle("Select a location to save to");
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int result = fileChooser.showSaveDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File outputFile = fileChooser.getSelectedFile();
                 document.save(outputFile+".pdf");
                 JOptionPane.showMessageDialog(null, "PDF Encrypted Successfully!");
+            } else {
+                Runner.userClosedWindow=true;
             }
             Runner.programEndedExpectedly=true;
             System.exit(0);
         } catch (IOException e){
-
             GUIs.programCrashed(e);
         }
     }

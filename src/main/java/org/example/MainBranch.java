@@ -2,15 +2,17 @@ package org.example;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-public class OnLaunch {
+public class MainBranch {
     // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
-    public final static long time=System.currentTimeMillis();
+    public final static long currentTime =System.currentTimeMillis();
     // final char[] that stores the most common characters you can see on a keyboard
     public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','$','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
     public static void launch() throws Exception {
-        int response=-1;
-        while (response==-1){
-            response=GUIs.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a PDF", "Encrypt"});
+        int response=GUIs.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a PDF", "Encrypt"});
+        if (response==-1){
+            Runner.userClosedWindow=true;
+            Runner.programEndedExpectedly=true;
+            System.exit(0);
         }
         switch (response){
             case 2->{ // Encrypt Chosen
@@ -57,12 +59,14 @@ public class OnLaunch {
         }
     }
     private static void encryptionMethod(){
-        String textString=null;
-        while (textString == null){
-            textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
+        String textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
+        if (textString == null){
+            Runner.userClosedWindow=true;
+            Runner.programEndedExpectedly=true;
+            System.exit(0);
         }
         try { // To see if I can encrypt the text without errors
-            System.out.println(encrypt(textString,String.valueOf(time)));
+            System.out.println(encryptString(textString,String.valueOf(currentTime)));
             // I can also not System.out.println() the message but adding so makes debugging easier
         } catch (NullPointerException e){
             GUIs.msgPopUp("Invalid Characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
@@ -70,15 +74,15 @@ public class OnLaunch {
             System.exit(0);
         }
         // Encrypting for the first time:
-        String firstEncryption=time+"Ø"+encrypt(textString,String.valueOf(time));
-        int newIndex=0;
+        String firstEncryption= currentTime +"Ø"+ encryptString(textString,String.valueOf(currentTime));
+        long newIndex=0;
         for (int i=0;i<firstEncryption.length();i++){
             // Adding characters' Unicode index to make new index
             // E.g. int a='a'+'¿'; a=288 ('a'=97,'¿'=191)
             newIndex+=firstEncryption.charAt(i);
         }
         // Encrypting for the second time
-        String finalText = newIndex+"Ø"+encrypt(firstEncryption, String.valueOf(newIndex));
+        String finalText = newIndex+"Ø"+ encryptString(firstEncryption, String.valueOf(newIndex));
 
         // Prompt the user whether to copy the output to their clipboard
         // I mean chances are they will choose to copy but what if they had something important in their clipboard?
@@ -94,7 +98,7 @@ public class OnLaunch {
         // 2 for after encryption
         Runner.programEndedExpectedly =true;
     }
-    private static String encrypt(String s, String enteredIndex) {
+    private static String encryptString(String s, String enteredIndex) {
         int index=getIndex(enteredIndex);
         char[] encrypted = new char[s.length()];
         for (int i = 0; i < s.length(); i++) {
@@ -119,7 +123,7 @@ public class OnLaunch {
     private static void decryptionMethod(){
         String input=GUIs.textPopUp("Enter your input here: ","Input");
         if (input == null){
-            GUIs.msgPopUp("You didn't enter anything!","Bad Input!","error");
+            Runner.userClosedWindow=true;
             Runner.programEndedExpectedly=true;
             System.exit(0);
         }
@@ -141,7 +145,7 @@ public class OnLaunch {
             subString.append(separatedInput[i]);
         }
         // Decrypting first layer:
-        String decryptedText=decrypt(subString.toString(), Long.parseLong(separatedInput[0]));
+        String decryptedText= decryptString(subString.toString(), Long.parseLong(separatedInput[0]));
         System.out.println(decryptedText);
         // Decrypting second layer:
         String[] separatedDecryptedText=decryptedText.split("Ø");
@@ -156,7 +160,7 @@ public class OnLaunch {
         for (int i=1;i<separatedDecryptedText.length;i++){
             alsoSubString.append(separatedDecryptedText[i]);
         }
-        String unencryptedText=decrypt(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
+        String unencryptedText= decryptString(alsoSubString.toString(),Long.parseLong(separatedDecryptedText[0]));
 
         // An if-else statement that asks the user whether to copy to their clipboard
         if (GUIs.optionPopUp("Do you want to save the result to clipboard?\nThis will override your clipboard!","Copy to clipboard?")==0){
@@ -171,7 +175,7 @@ public class OnLaunch {
         // 6 is for after decryption
         Runner.programEndedExpectedly=true;
     }
-    private static String decrypt(String s, long index) {
+    private static String decryptString (String s, long index) {
         index=getIndex(String.valueOf(index));
         char[] decryptedArray = new char[s.length()];
         for (int i = 0; i < s.length(); i++) {// Iterate through each character of the string
