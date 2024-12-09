@@ -8,16 +8,7 @@ public class Runner {
     // This boolean determines whether the error is impacting user experience, false for fatal, true for minor
     public static boolean userClosedWindow = false;
     public static void main(String[] args){
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (!programEndedExpectedly){
-                // Shutdown Hook for abnormal quits without exceptions
-                System.out.println("Emergency shutdown hook executed!");
-                GUIs.programCrashed(); // Requests the GUIs Class to show the alert, then error logging
-                programEndedExpectedly=true;
-            } else if (!userClosedWindow){
-                runApp();
-            }
-        }));
+        addShutDownHook();
         runApp();
     }
     private static void runApp(){
@@ -32,5 +23,25 @@ public class Runner {
                 System.exit(0);
             }
         }
+    }
+    private static void addShutDownHook(){
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!programEndedExpectedly){
+                // Shutdown Hook for abnormal quits without exceptions
+                System.out.println("Emergency shutdown hook executed!");
+                GUIs.programCrashed(); // Requests the GUIs Class to show the alert, then error logging
+                programEndedExpectedly=true;
+            } else if (!userClosedWindow){
+                resetInstanceVariables();
+                runApp();
+                addShutDownHook();
+            }
+        }));
+    }
+    private static void resetInstanceVariables(){
+        programRunProgress=0;
+        programEndedExpectedly=false;
+        requestSilenceCrashReport=false;
+        userClosedWindow=false;
     }
 }
