@@ -132,12 +132,12 @@ public class MainBranch {
             throw e;
         }
         StringBuilder subString=new StringBuilder();
-        for (int i=1;i<separatedInput.length;i++){
-            subString.append(separatedInput[i]);
+        for (int i=separatedInput[0].length()+1;i<input.length();i++){
+            subString.append(input.charAt(i));
         }
         // Decrypting first layer:
         String decryptedText= decryptString(subString.toString(), Long.parseLong(separatedInput[0]));
-        System.out.println(decryptedText);
+        System.out.println(subString.toString().length()==decryptedText.length()+separatedInput[0].length()+1);
         // Decrypting second layer:
         String[] separatedDecryptedText=decryptedText.split("Ø");
         try {
