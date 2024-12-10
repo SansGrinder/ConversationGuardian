@@ -137,7 +137,6 @@ public class MainBranch {
         }
         // Decrypting first layer:
         String decryptedText= decryptString(subString.toString(), Long.parseLong(separatedInput[0]));
-        System.out.println(subString.toString().length()==decryptedText.length()+separatedInput[0].length()+1);
         // Decrypting second layer:
         String[] separatedDecryptedText=decryptedText.split("Ø");
         try {
