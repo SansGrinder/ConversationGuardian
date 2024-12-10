@@ -74,7 +74,6 @@ public class MainBranch {
         }
         // Encrypting for the second time
         String finalText = newIndex+"Ø"+ encryptString(firstEncryption, String.valueOf(newIndex));
-        System.out.println(finalText.length()==(textString.length()+String.valueOf(currentTime).length()+String.valueOf(newIndex).length()+2));
         // Prompt the user whether to copy the output to their clipboard
         // I mean chances are they will choose to copy but what if they had something important in their clipboard?
         if (GUIs.optionPopUp("Do you want to save the result to clipboard?\nThis will override your clipboard!","Copy to clipboard?")==0){
