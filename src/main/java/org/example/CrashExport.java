@@ -22,11 +22,19 @@ public class CrashExport {
             case 6 -> "After decryption";
             default -> "Unable to fetch program run state";
         };
-        saveCrashLog(System.getProperty("user.home")+"/Downloads","Program run state: "+programRunPhase+"\nException:\n"+stackTrace);
-        if (!Runner.programEndedExpectedly){
+        if (!Runner.requestSilenceCrashReport){
+            saveCrashLog(System.getProperty("user.home")+"/Downloads","Program run state: "+programRunPhase+"\nException:\n"+stackTrace);
+            if (!Runner.programEndedExpectedly){
+                CrashEmail email=new CrashEmail(
+                        System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
+                        "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,true
+                );
+                email.sendAnEmail();
+            }
+        } else {
             CrashEmail email=new CrashEmail(
                     System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
-                    "Program run state: "+programRunPhase+"\nException:\n"+stackTrace
+                    "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
             );
             email.sendAnEmail();
         }

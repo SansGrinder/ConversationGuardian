@@ -60,8 +60,9 @@ public class MainBranch {
             }
         } catch (NullPointerException e){
             GUIs.msgPopUp(e.getMessage().contains("Empty input")?"You didn't enter anything!\nRelaunch the program to try again, or contact the programmer if you believe this is a mistake.":"Invalid characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
+            Runner.requestSilenceCrashReport=true;
             Runner.programEndedExpectedly=true;
-            System.exit(0);
+            throw e;
         }
         // Encrypting for the first time:
         String firstEncryption= currentTime +"Ø"+ encryptString(textString,String.valueOf(currentTime));
