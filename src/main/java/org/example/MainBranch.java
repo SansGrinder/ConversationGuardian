@@ -1,26 +1,32 @@
 package org.example;
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.io.IOException;
+
 public class MainBranch {
     // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
     public final static long currentTime=System.currentTimeMillis();
     // final char[] that stores the most common characters you can see on a keyboard
     public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
+    // final JFileChooser for PDFBox.
+    private static final JFileChooser fileChooser = new JFileChooser();
     public static void launch() throws Exception {
-        int response=GUIs.optionPopUp("Choose a mode: ", "Select an option: ",new String[]{"Decrypt", "Select a PDF", "Encrypt"});
-        if (response==-1){
-            Runner.userClosedWindow=true;
-            Runner.programEndedExpectedly=true;
-            System.exit(0);
-        }
+        int response = GUIs.optionPopUp("Choose a mode: ", "Select an option: ", new String[]{"Decrypt", "Select a PDF", "Encrypt"});
         switch (response){
             case 2->{ // Encrypt Chosen
                 Runner.programRunProgress=1;
                 // 1 for Encryption
                 encryptionMethod();
             }
-            case 1-> PDFEncryptDecrypt.start(); // User want to select a PDF
+            case 1-> PDFMethod(); // User want to select a PDF
             case 0->{ // Decrypt Chosen
                 Runner.programRunProgress=5;
                 // 5 is for Before Decryption
@@ -190,5 +196,72 @@ public class MainBranch {
         }
         // Return type is String, so we return a new String().
         return new String(decryptedArray);
+    }
+    private static void encryptPDF(String filePath, String password){
+        try (PDDocument document = Loader.loadPDF(new File(filePath))) {
+            AccessPermission ap = new AccessPermission();
+            ap.setCanPrint(false);
+            ap.setCanModifyAnnotations(false);
+            ap.setCanExtractContent(false);
+            ap.setCanModifyAnnotations(false);
+            ap.setCanFillInForm(false);
+            ap.setCanExtractForAccessibility(false);
+            ap.setCanAssembleDocument(true);
+
+            StandardProtectionPolicy spp = new StandardProtectionPolicy(password, password, ap);
+            document.protect(spp);
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Select a location to save to");
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int result = fileChooser.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File outputFile = fileChooser.getSelectedFile();
+                document.save(outputFile+".pdf");
+                JOptionPane.showMessageDialog(null, "PDF Encrypted Successfully!");
+            } else {
+                Runner.userClosedWindow=true;
+            }
+            Runner.programEndedExpectedly=true;
+            System.exit(0);
+        } catch (IOException e){
+            GUIs.programCrashed(e);
+        }
+    }
+    private static void PDFMethod(){
+        Runner.programRunProgress=3;
+        // 3 is for before PDF encryption
+        // Add a default file filter to only accept PDF files
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                }
+                return f.getName().toLowerCase().endsWith(".pdf");
+            }
+            @Override
+            public String getDescription() {
+                return "PDF Files (*.pdf)";
+            }
+        });
+        // Asks the user to select a .pdf file
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String filePath = selectedFile.getAbsolutePath();
+            // Encrypting the PDF
+            String password = GUIs.textPopUp("Please enter password for the PDF: ","Set a password");
+            if (password==null){
+                Runner.userClosedWindow=true;
+                Runner.programEndedExpectedly=true;
+                System.exit(0);
+            }
+            encryptPDF(filePath, password);
+            Runner.programRunProgress=4;
+            // 4 for after PDF Encryption
+        } else {
+            Runner.programEndedExpectedly =true;
+            System.exit(0);
+        }
     }
 }
