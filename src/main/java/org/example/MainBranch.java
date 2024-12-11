@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class MainBranch {
     // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
-    public final static long currentTime=System.currentTimeMillis();
+    private final static long currentTime=System.currentTimeMillis();
     // final char[] that stores the most common characters you can see on a keyboard
     public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
     // final JFileChooser for PDFBox.
@@ -26,7 +26,7 @@ public class MainBranch {
                 // 1 for Encryption
                 encryptionMethod();
             }
-            case 1-> PDFMethod(); // User want to select a PDF
+            case 1-> PDFBranch(); // User want to select a PDF
             case 0->{ // Decrypt Chosen
                 Runner.programRunProgress=5;
                 // 5 is for Before Decryption
@@ -231,11 +231,12 @@ public class MainBranch {
                 Runner.userClosedWindow=true;
             }
             Runner.programEndedExpectedly=true;
+            System.exit(0);
         } catch (IOException e){
             GUIs.programCrashed(e);
         }
     }
-    private static void PDFMethod(){
+    private static void PDFBranch(){
         Runner.programRunProgress=3;
         // 3 is for before PDF encryption
         // Add a default file filter to only accept PDF files
