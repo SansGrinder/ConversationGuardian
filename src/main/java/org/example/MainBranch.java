@@ -216,13 +216,17 @@ public class MainBranch {
             int result = fileChooser.showSaveDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 File outputFile = fileChooser.getSelectedFile();
-                document.save(outputFile+".pdf");
+                try {
+                    document.save(outputFile+".pdf");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 JOptionPane.showMessageDialog(null, "PDF Encrypted Successfully!");
             } else {
                 Runner.userClosedWindow=true;
             }
+
             Runner.programEndedExpectedly=true;
-            System.exit(0);
         } catch (IOException e){
             GUIs.programCrashed(e);
         }
