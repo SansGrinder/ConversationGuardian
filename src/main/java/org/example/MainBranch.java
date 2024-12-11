@@ -32,6 +32,11 @@ public class MainBranch {
                 // 5 is for Before Decryption
                 decryptionMethod();
             }
+            case -1->{
+                Runner.userClosedWindow=true;
+                Runner.programEndedExpectedly=true;
+                System.exit(0);
+            }
             default->{
                 // Logically impossible to reach
                 // Generating silent crash report
@@ -225,7 +230,6 @@ public class MainBranch {
             } else {
                 Runner.userClosedWindow=true;
             }
-
             Runner.programEndedExpectedly=true;
         } catch (IOException e){
             GUIs.programCrashed(e);
