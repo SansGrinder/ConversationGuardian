@@ -58,7 +58,7 @@ public class MainBranch {
     }
     private static void encryptionMethod(){
         String textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
-        //
+        // Although the dictionary contains most characters you can see on a keyboard, not all characters could be included. The user will be prompted that the input is invalid if so.
         if (textString == null){
             Runner.userClosedWindow=true;
             Runner.programEndedExpectedly=true;
