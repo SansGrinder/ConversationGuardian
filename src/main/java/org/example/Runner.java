@@ -25,9 +25,9 @@ public class Runner {
     private static void runApp(){
         try {
             MainBranch.launch(); // The main program
-        } catch (Exception e){
+        } catch (Exception e){ // This catches any exceptions thrown in the main program
             if (requestSilenceCrashReport) {
-                GUIs.expectedProgramCrash(e);
+                GUIs.expectedProgramCrash(e); // Doesn't generate a local crash log
             } else {
                 GUIs.programCrashed(e); // Passing the GUIs Class the exception to be used for error logging
                 programEndedExpectedly = true;

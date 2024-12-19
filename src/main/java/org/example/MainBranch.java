@@ -49,15 +49,16 @@ public class MainBranch {
     private static int getIndex(String input){
         long id=Long.parseLong(input);
         id%=dictionary.length;
-        if (id==0){
+        if (id==0){ // If index is 0, the String will not be encrypted
             id=2;
-        } else if (id<0){
+        } else if (id<0){ // Index being negative works alright, but we want to keep things consistent.
             id=Math.abs(id);
         }
         return (int) id;
     }
     private static void encryptionMethod(){
         String textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
+        //
         if (textString == null){
             Runner.userClosedWindow=true;
             Runner.programEndedExpectedly=true;
@@ -101,8 +102,11 @@ public class MainBranch {
         Runner.programEndedExpectedly=true;
     }
     private static String encryptString(String s, String enteredIndex) {
-        int index=getIndex(enteredIndex);
-        char[] encrypted = new char[s.length()];
+        // This is a generalized method that accepts any String with an integer
+        int index=getIndex(enteredIndex); // Parses the enteredIndex to make sure it is within acceptable range
+
+        char[] encrypted = new char[s.length()]; // Since we're doing it character by character, we'll be using a char[] for output
+        // Iterating through the dictionary to search for the character
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             int n = -1;
@@ -112,12 +116,13 @@ public class MainBranch {
                     break;
                 }
             }
+            // If index found, encrypt it; else inform the user that characters is not accepted
             if (n != -1) {
                 int encryptedIndex = (n + index) % dictionary.length;
                 char encryptedChar = dictionary[encryptedIndex];
                 encrypted[i] = encryptedChar;
             } else {
-                throw new NullPointerException("Character ("+c+") not found within dictionary!"); // throw new Exception if character is not found in the dictionary
+                throw new IllegalStateException("Character ("+c+") not found within dictionary!"); // throw new Exception if character is not found in the dictionary
             }
         }
         return new String(encrypted);
@@ -177,6 +182,7 @@ public class MainBranch {
         Runner.programEndedExpectedly=true;
     }
     private static String decryptString (String s, long index) {
+        // Generalized method that accepts any String and int.
         index=getIndex(String.valueOf(index));
         char[] decryptedArray = new char[s.length()];
         for (int i = 0; i < s.length(); i++) {// Iterate through each character of the string
