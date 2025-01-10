@@ -15,10 +15,11 @@ public class MainBranch {
     // Gets and stores the difference between the current time and 1970 January 1st 0:00 in milliseconds
     private final static long currentTime=System.currentTimeMillis();
     // final char[] that stores the most common characters you can see on a keyboard
-    public final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
+    private final static char[] dictionary={'#','y','F','7','Z','L','r','X','j','0','s',(char)92,')','a','+','~','f','h','`','>','t','%','8','K','Ø','9','k','l','i','A','*','J','T','S','6','m','@','}','o','M','C','_',(char)39,'z','E','&','G','b','R','W','g','I','^','H','|','=','P','O','{','N','Y','2','.','v','u','5','D','"','，','。','？','！','《','》','（','）','￥',']','?','[','$',':','(','V','<','n','c','U','!','π','B','-','x','；','：','“','”','‘','’',' ',';','q','、','w','p',',','e','Q','d','3','1','4','/','','¿'};
     // final JFileChooser for PDFBox.
     private static final JFileChooser fileChooser = new JFileChooser();
     public static void launch() throws Exception {
+//        System.out.println(dictionary[1145]);
         int response = GUIs.optionPopUp("Choose a mode: ", "Select an option: ", new String[]{"Decrypt", "Select a PDF", "Encrypt"});
         switch (response){
             case 2->{ // Encrypt Chosen
@@ -40,9 +41,8 @@ public class MainBranch {
             default->{
                 // Logically impossible to reach
                 // Generating silent crash report
-                GUIs.msgPopUp("Error! Could not read your response!","ERROR","error");
-                Runner.requestSilenceCrashReport=true;
-                throw new Exception("Impossible user response ("+response+") in OnLaunch - Main Method - switch_case block");
+                GUIs.msgPopUp("Error! Could not read your response!\nRestarting the program...","ERROR","error");
+                throw new ExpectedException("Impossible user response ("+response+") in OnLaunch - Main Method - switch_case block", new IllegalStateException());
             }
         }
     }
@@ -56,7 +56,7 @@ public class MainBranch {
         }
         return (int) id;
     }
-    private static void encryptionMethod(){
+    private static void encryptionMethod() throws Exception {
         String textString=GUIs.textPopUp("Enter your text here: ",(Object)"(Don't include Chinese Characters/punctuations or weird symbols!)");
         // Although the dictionary contains most characters you can see on a keyboard, not all characters could be included. The user will be prompted that the input is invalid if so.
         if (textString == null){
@@ -71,10 +71,10 @@ public class MainBranch {
                 throw new NullPointerException("Empty input");
             }
         } catch (NullPointerException e){
-            GUIs.msgPopUp(e.getMessage().contains("Empty input")?"You didn't enter anything!\nRelaunch the program to try again, or contact the programmer if you believe this is a mistake.":"Invalid characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ","BAD INPUT","plain text");
-            Runner.requestSilenceCrashReport=true;
+            String errorMessage=e.getMessage().contains("Empty input")?"No input found!\nRelaunch the program to try again, or contact the developer if you believe this is a mistake.":"Invalid characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ";
+            GUIs.msgPopUp(errorMessage,"BAD INPUT","plain text");
             Runner.programEndedExpectedly=true;
-            throw e;
+            throw new ExpectedException(errorMessage,e);
         }
         // Encrypting for the first time:
         String firstEncryption= currentTime +"Ø"+ encryptString(textString,String.valueOf(currentTime));
@@ -101,7 +101,7 @@ public class MainBranch {
         // 2 for after encryption
         Runner.programEndedExpectedly=true;
     }
-    private static String encryptString(String s, String enteredIndex) {
+    private static String encryptString(String s, String enteredIndex) throws Exception{
         // This is a generalized method that accepts any String with an integer
         int index=getIndex(enteredIndex); // Parses the enteredIndex to make sure it is within acceptable range
 
@@ -122,12 +122,14 @@ public class MainBranch {
                 char encryptedChar = dictionary[encryptedIndex];
                 encrypted[i] = encryptedChar;
             } else {
-                throw new IllegalStateException("Character ("+c+") not found within dictionary!"); // throw new Exception if character is not found in the dictionary
+                String errorMessage= "Character '" +c+ "' not found within dictionary!";
+                GUIs.msgPopUp(errorMessage+"\nRestarting the program...","Invalid Input!\nRestarting the program...","text");
+                throw new ExpectedException(errorMessage, new IllegalStateException()); // throw new Exception if character is not found in the dictionary
             }
         }
         return new String(encrypted);
     }
-    private static void decryptionMethod(){
+    private static void decryptionMethod() throws Exception {
         String input=GUIs.textPopUp("Enter your input here: ","Input");
         if (input == null){
             Runner.userClosedWindow=true;
@@ -136,16 +138,15 @@ public class MainBranch {
         }
         String[] separatedInput=input.split("Ø");
         if (separatedInput.length<2){
-            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
+            GUIs.msgPopUp("Your input is invalid!\nRestarting the program...","Bad Input!","error");
             Runner.programEndedExpectedly=true;
             System.exit(0);
         }
         try {
             System.out.println(Integer.parseInt(separatedInput[0]));
         } catch (NumberFormatException e){
-            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
-            Runner.requestSilenceCrashReport=true;
-            throw e;
+            GUIs.msgPopUp("Your input is invalid!\nRestarting the program...","Bad Input!","error");
+            throw new ExpectedException("Invalid input (Decrypt Section)", e);
         }
         StringBuilder subString=new StringBuilder();
         for (int i=separatedInput[0].length()+1;i<input.length();i++){
@@ -158,9 +159,8 @@ public class MainBranch {
         try {
             System.out.println(Long.parseLong(separatedDecryptedText[0]));
         } catch (NumberFormatException e){
-            GUIs.msgPopUp("Your input is invalid!","Bad Input!","error");
-            Runner.requestSilenceCrashReport=true;
-            throw e;
+            GUIs.msgPopUp("Your input is invalid!\nRestarting the program...","Bad Input!","error");
+            throw new ExpectedException("Invalid input (Decrypt Section)", e);
         }
         StringBuilder alsoSubString=new StringBuilder();
         for (int i=separatedDecryptedText[0].length()+1;i<decryptedText.length();i++){
@@ -208,7 +208,7 @@ public class MainBranch {
         // Return type is String, so we return a new String().
         return new String(decryptedArray);
     }
-    private static void encryptPDF(String filePath, String password){
+    private static void encryptPDF(String filePath, String password) throws Exception {
         try (PDDocument document = Loader.loadPDF(new File(filePath))) {
             AccessPermission ap = new AccessPermission();
             ap.setCanPrint(false);
@@ -230,7 +230,8 @@ public class MainBranch {
                 try {
                     document.save(outputFile+".pdf");
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    GUIs.msgPopUp("Oh No! The program failed to write your PDF!\nAn email will be sent to the developer along with the error logs. ","Unexpected Program Crash!","error");
+                    throw new FatalError(new RuntimeException(e));
                 }
                 JOptionPane.showMessageDialog(null, "PDF Encrypted Successfully!");
             } else {
@@ -239,10 +240,11 @@ public class MainBranch {
             Runner.programEndedExpectedly=true;
             System.exit(0);
         } catch (IOException e){
-            GUIs.programCrashed(e);
+            GUIs.msgPopUp("Oh No! The program failed to write your PDF!\nAn email will be sent to the developer along with the error logs. ","Unexpected Program Crash!","error");
+            throw new FatalError(e);
         }
     }
-    private static void PDFBranch(){
+    private static void PDFBranch() throws Exception {
         Runner.programRunProgress=3;
         // 3 is for before PDF encryption
         // Add a default file filter to only accept PDF files

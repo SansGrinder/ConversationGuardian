@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 public class CrashExport {
     public static String formattedTime="";
-    public static void generateCrashReport(int programRunState, Exception e){
+    public static void generateCrashReport(int programRunState, FatalError e){
         System.out.println("generateCrashReport has been called, with a programRunState of "+programRunState+" and the exception being "+e);
         String stackTrace;
         StringWriter sw = new StringWriter();
@@ -22,22 +22,35 @@ public class CrashExport {
             case 6 -> "After decryption";
             default -> "Unable to fetch program run state";
         };
-        if (!Runner.requestSilenceCrashReport){
-            saveCrashLog(System.getProperty("user.home")+"/Downloads","Program run state: "+programRunPhase+"\nException:\n"+stackTrace);
-            if (!Runner.programEndedExpectedly){
-                CrashEmail email=new CrashEmail(
-                        System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
-                        "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,true
-                );
-                email.sendAnEmail();
-            }
-        } else {
-            CrashEmail email=new CrashEmail(
-                    System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
-                    "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
-            );
-            email.sendAnEmail();
-        }
+        saveCrashLog(System.getProperty("user.home")+"/Downloads","Program run state: "+programRunPhase+"\nException:\n"+stackTrace);
+        CrashEmail email=new CrashEmail(
+                System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
+                "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
+        );
+        email.sendAnEmail();
+    }
+    public static void generateCrashReport(int programRunState, ExpectedException e){
+        System.out.println("generateCrashReport has been called, with a programRunState of "+programRunState+" and the exception being "+e);
+        String stackTrace;
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        stackTrace = sw.toString();
+        String programRunPhase = switch (programRunState) {
+            case 0 -> "Before mode selection";
+            case 1 -> "Encryption";
+            case 2 -> "After Encryption";
+            case 3 -> "PDF Encryption";
+            case 4 -> "After PDF Encryption";
+            case 5 -> "Decryption";
+            case 6 -> "After decryption";
+            default -> "Unable to fetch program run state";
+        };
+        CrashEmail email=new CrashEmail(
+                System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
+                "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
+        );
+        email.sendAnEmail();
     }
     private static void saveCrashLog(String filePath, String content) {
         // Get the current time with seconds

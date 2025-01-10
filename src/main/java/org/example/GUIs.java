@@ -1,21 +1,21 @@
 package org.example;
 import javax.swing.JOptionPane;
 public class GUIs { // Sorted by order of execution
-    public static void programCrashed(Exception e){
-        msgPopUp("The program has crashed due to an error!\nA crash report will be saved to your Downloads folder! Send Gordon the crash log so he can fix it!","Oh No...","error");
+    public static void programCrashed(FatalError e){
+        msgPopUp("The program has crashed due to an error!","Oh No...","error");
         CrashExport.generateCrashReport(Runner.programRunProgress,e);
-        Runner.programEndedExpectedly =true;
+        Runner.programEndedExpectedly = true;
         System.exit(0);
-    } // For crashing with exception
+    } // For crashing with Unexpected Exceptions
     public static void programCrashed(){
-        msgPopUp("Oh no! The program has crashed due to an unknown error!\nA crash report will be saved to your Downloads folder! Let's hope Gordon can fix it!","Oh No...","error");
-        Runner.programEndedExpectedly =true;
+        msgPopUp("Oh no! The program has crashed due to an unknown error!","Oh No...","error");
+        Runner.programEndedExpectedly = true;
         System.exit(0);
-    } // For crashing WITHOUT exceptions
-    public static void expectedProgramCrash(Exception e){
+    } // For crashing WITHOUT exceptions. This really shouldn't happen...
+    public static void expectedProgramCrash(ExpectedException e){
         CrashExport.generateCrashReport(Runner.programRunProgress, e);
-        Runner.programEndedExpectedly=true;
-    } // For silent crash reports
+        Runner.programEndedExpectedly = true;
+    } // For crashing with expected user-caused exceptions. No logs will be generated.
 
     // Below this point are JOptionPane "shortcut" methods
 

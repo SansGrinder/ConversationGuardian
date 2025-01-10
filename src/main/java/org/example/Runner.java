@@ -4,8 +4,6 @@ public class Runner {
     // This program run progress variable is used for crash report generating
     public static boolean programEndedExpectedly = false;
     // This boolean values determines if a program ended as expected
-    public static boolean requestSilenceCrashReport = false;
-    // This boolean determines whether the error is impacting user experience, false for fatal, true for minor
     public static boolean userClosedWindow = false;
     public static void main(String[] args){
         // Adding a shutdown hook to the program for unexpected crash
@@ -25,20 +23,21 @@ public class Runner {
     private static void runApp(){
         try {
             MainBranch.launch(); // The main program
-        } catch (Exception e){ // This catches any exceptions thrown in the main program
-            if (requestSilenceCrashReport) {
-                GUIs.expectedProgramCrash(e); // Doesn't generate a local crash log
-            } else {
-                GUIs.programCrashed(e); // Passing the GUIs Class the exception to be used for error logging
-                programEndedExpectedly = true;
-                System.exit(0);
-            }
+        } catch (ExpectedException exp){
+            GUIs.expectedProgramCrash(exp); // Doesn't generate a local crash log
+        } catch (FatalError fte){
+            GUIs.programCrashed(fte); // Passing the exception to the GUIs Class for error logging
+            programEndedExpectedly = true;
+            System.exit(0);
+        } catch (Exception e){ // This catches any other unexpected exceptions thrown in the main program
+            GUIs.programCrashed(new FatalError(e)); // Passing the exception to the GUIs Class for error logging
+            programEndedExpectedly = true;
+            System.exit(0);
         }
     }
     private static void resetInstanceVariables(){
         programRunProgress=0;
         programEndedExpectedly=false;
-        requestSilenceCrashReport=false;
         userClosedWindow=false;
     }
 }
