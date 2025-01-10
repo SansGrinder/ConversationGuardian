@@ -54,8 +54,8 @@ Well, decryption process is pretty much the same, but inverted. I won't repeat i
 As mentioned above, this application uses ```pdfbox-app-3.0.3.jar```. This library allows me to password-lock your PDF. 
 
 #### You mentioned you get an email whenever an error occurred. How does that work?
-First of all, ```javax.mail.jar``` did the job. I registered a [163 mail](mail.163.com) email and made that email send my *soon-abandoned* school email address an email with your error message and log. Feel free to impersonate the bot email, but really - why not just create one yourself?
+First of all, ```javax.mail.jar``` did the job. I registered a [163 mail](https://mail.163.com) email and made that email send my *soon-abandoned* school email address an email with your error message and log. Feel free to impersonate the bot email, but really - why not just create one yourself?
 
 #### Anything you want to say? 
-Well, huge thanks to Mr. ~~Name Blocked Due To Assessment Requirements~~ and everyone else who has help me develop this program. Special thanks to [Kimi AI](kimi.moonshot.cn) for idea brainstorming and technical support.  
+Well, huge thanks to Mr. ~~Name Blocked Due To Assessment Requirements~~ and everyone else who has help me develop this program. Special thanks to [Kimi AI](https://kimi.moonshot.cn) for idea brainstorming and technical support.  
 If you want to try this program, thank you for trusting an untrustworthy student developer. I hope you find this project useful. 
