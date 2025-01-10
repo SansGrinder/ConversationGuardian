@@ -138,14 +138,14 @@ public class MainBranch {
         }
         String[] separatedInput=input.split("Ø");
         if (separatedInput.length<2){
-            GUIs.msgPopUp("Your input is invalid!\nRestarting the program...","Bad Input!","error");
+            GUIs.msgPopUp("Your input is invalid!\nPlease restart the program. ","Bad Input!","error");
             Runner.programEndedExpectedly=true;
             System.exit(0);
         }
         try {
             System.out.println(Integer.parseInt(separatedInput[0]));
         } catch (NumberFormatException e){
-            GUIs.msgPopUp("Your input is invalid!\nRestarting the program...","Bad Input!","error");
+            GUIs.msgPopUp("Your input is invalid!\nPlease restart the program. ","Bad Input!","error");
             throw new ExpectedException("Invalid input (Decrypt Section)", e);
         }
         StringBuilder subString=new StringBuilder();

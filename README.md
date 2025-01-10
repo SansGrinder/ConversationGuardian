@@ -35,7 +35,7 @@ This app aims to protect your *important* conversations so others could not get 
     * (Optional) Internet Connection (For emailing me any error you got)
     * The errors that occurred as you run the program. (So I can fix it if too many people are experiencing the same issue)
   * ```JFileChooser``` for PDF selecting is unstable. Sorry for the inconvenience but I can't find a solution yet. 
-  * For Mac Users, this *.app* has an *"Unidentified Developer"* and *.jar* might be considered as *"malware"*. However I promise you it is not a malware. 
+  * For Mac Users, this *.app* has an *"Unidentified Developer"* and *.jar* might be considered as *"malware"*. However, I promise you it is not a malware. 
   * This project is for an assessment, meaning if I don't feel like it or finds too little users I might stop updating this project. 
   * ~~The programmer for this project is a weirdo who loves ```NullPointerException(s)```~~.
 
