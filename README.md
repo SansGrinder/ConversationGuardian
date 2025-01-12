@@ -26,9 +26,10 @@ This app aims to protect your *important* conversations so others could not get 
   * This app *(in theory)* works on **both Windows and Mac**. 
   * This app is ***completely free*** and provides you the *.jar* *.app* and/or source code. 
   * This app *automatically* sends me, the developer, your error logs *(if you have internet connection)* ***via my own email***. 
-  * Since you can see this, the app is also *open-sourced*, meaning it is safe from viruses (check it yourself if you don't believe me). 
+  * Since you can see this page, the app is also *open-sourced*, meaning it is safe from viruses (check it yourself if you don't believe me). 
 * Disadvantages: 
-  * This app is only tested on **Mac**. Sorry Windows users but if you got an error I can see it. 
+  * On Windows, running the .jar file will show a different GUI and button orders will be inverted. Sorry Windows users but I can't really fix this. 
+  * This app requires JDK 23.0.1 or higher. I have no idea why but you need it. Yes even if you are running the .jar on Windows. 
   * For assessment purposes, this app will need access to: 
     * Your local computer name. (eg. example.name)
     * Your downloads folder (the program assumes and requires you to have one)
@@ -36,6 +37,7 @@ This app aims to protect your *important* conversations so others could not get 
     * The errors that occurred as you run the program. (So I can fix it if too many people are experiencing the same issue)
   * ```JFileChooser``` for PDF selecting is unstable. Sorry for the inconvenience but I can't find a solution yet. 
   * For Mac Users, this *.app* has an *"Unidentified Developer"* and *.jar* might be considered as *"malware"*. However, I promise you it is not a malware. 
+    * Solution: System Preferences - Privacy and Security - ("Conversation Guardian.app might be malware blah blah blah") Open Anyway - Open Anyway
   * This project is for an assessment, meaning if I don't feel like it or finds too little users I might stop updating this project. 
   * ~~The programmer for this project is a weirdo who loves ```NullPointerException(s)```~~.
 

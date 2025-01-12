@@ -19,7 +19,6 @@ public class MainBranch {
     // final JFileChooser for PDFBox.
     private static final JFileChooser fileChooser = new JFileChooser();
     public static void launch() throws Exception {
-//        System.out.println(dictionary[1145]);
         int response = GUIs.optionPopUp("Choose a mode: ", "Select an option: ", new String[]{"Decrypt", "Select a PDF", "Encrypt"});
         switch (response){
             case 2->{ // Encrypt Chosen
@@ -66,17 +65,25 @@ public class MainBranch {
         }
         try { // To see if I can encrypt the text without errors
             System.out.println(encryptString(textString,String.valueOf(currentTime)));
-            // I can also not System.out.println() the message but adding so makes debugging easier
+            // I can also ignore the return value of encryptString() but printing it out makes debugging easier
             if (textString.isEmpty()){
+                // Does not accept empty inputs.
                 throw new NullPointerException("Empty input");
             }
         } catch (NullPointerException e){
-            String errorMessage=e.getMessage().contains("Empty input")?"No input found!\nRelaunch the program to try again, or contact the developer if you believe this is a mistake.":"Invalid characters found in your input!\nDo not include Chinese Characters/Punctuations or any non-English symbol! Please run the code again if you want to try again. ";
+            // A NullPointerException could be caused by 3 reasons: empty input, character not found, or unexpected input.
+            String errorMessage=e.getMessage().contains("Empty input")?
+                    "No input found!\n" +
+                    "Relaunch the program to try again, or contact the developer if you believe this is a mistake.":
+                    "Invalid characters found in your input!\n" +
+                            "Do not include Chinese Characters/Punctuations or any non-English symbol! " +
+                            "Please run the code again if you want to try again. ";
+            // This ensures we print out the correct error no matter what has caused it.
             GUIs.msgPopUp(errorMessage,"BAD INPUT","plain text");
             Runner.programEndedExpectedly=true;
             throw new ExpectedException(errorMessage,e);
         }
-        // Encrypting for the first time:
+        // Encrypting for the first time: (adding index to the front)
         String firstEncryption= currentTime +"Ø"+ encryptString(textString,String.valueOf(currentTime));
         long newIndex=0;
         for (int i=0;i<firstEncryption.length();i++){
