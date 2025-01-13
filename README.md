@@ -1,6 +1,6 @@
 Hello~ Didn't expect anyone to read this tbh.  
 
-tldr; this is my IB DP Computer Science Internal Assessment, and it is not well programmed.  
+tldr; this is my IB DP Computer Science Internal Assessment, and it is not very optimal. However, you're more than welcome to try this out! 
 
 ### What is this project?
 This is the source code of my final product, Conversation Guardian.app.  
@@ -9,11 +9,12 @@ This app aims to protect your *important* conversations so others could not get 
 #### What is required to run your code?
 *(This would only be part of your concern if you're trying to use my source code, since the .jar and the .app doesn't require you to download those libraries apart from JDK and JRE)*
 * Java JDK (23+)
-* JRE
-* ```javax.mail.jar```
-* ```javax.mail-api-1.6.2.jar```
-* ```javax.activation_1.2.2.v20221203-1659.jar```
-* ```pdfbox-app-3.0.3.jar```
+* JRE (Java Runtime Environment)
+* The following if you want to use my code: 
+  * ```javax.mail.jar```
+  * ```javax.mail-api-1.6.2.jar```
+  * ```javax.activation_1.2.2.v20221203-1659.jar```
+  * ```pdfbox-app-3.0.3.jar```
 
 #### This app has 2 main features: 
 1. **Encrypting/Decrypting**: String texts (*most* characters you can see on your keyboard, doesn't support Chinese or other languages), so that they look obfuscated. This isn't *too* easy to break though. 
@@ -28,7 +29,7 @@ This app aims to protect your *important* conversations so others could not get 
   * This app *automatically* sends me, the developer, your error logs *(if you have internet connection)* ***via my own email***. 
   * Since you can see this page, the app is also *open-sourced*, meaning it is safe from viruses (check it yourself if you don't believe me). 
 * Disadvantages: 
-  * On Windows, running the .jar file will show a different GUI and button orders will be inverted. Sorry Windows users but I can't really fix this. 
+  * On Windows, running the .jar file will show a different GUI and button orders will be inverted. Sorry Windows users, but I can't really fix this. 
   * This app requires JDK 23.0.1 or higher. I have no idea why but you need it. Yes even if you are running the .jar on Windows. 
   * For assessment purposes, this app will need access to: 
     * Your local computer name. (eg. example.name)
