@@ -15,10 +15,10 @@ public class Runner {
                 programEndedExpectedly=true;
             }
         }));
-        while (!userClosedWindow){
+        do {
             runApp();
             resetInstanceVariables();
-        }
+        } while (!userClosedWindow);
     }
     private static void runApp(){
         try {
