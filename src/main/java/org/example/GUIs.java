@@ -2,13 +2,13 @@ package org.example;
 import javax.swing.JOptionPane;
 public class GUIs { // Sorted by order of execution
     public static void programCrashed(FatalError e){
-        msgPopUp("The program has crashed due to an error!","Oh No...","error");
+        msgPopUp("The program has crashed due to an error!\nThis was not expected... An email will be sent to the developer. Let's hope he can fix the issue. ","Oh No...","error");
         CrashExport.generateCrashReport(Runner.programRunProgress,e);
         Runner.programEndedExpectedly = true;
         System.exit(0);
     } // For crashing with Unexpected Exceptions
     public static void programCrashed(){
-        msgPopUp("Oh no! The program has crashed due to an unknown error!","Oh No...","error");
+        msgPopUp("Oh no! The program has crashed due to an unknown error!\nAn email will be sent to the developer, but he might still need to check your side...","Oh No...","error");
         Runner.programEndedExpectedly = true;
         System.exit(0);
     } // For crashing WITHOUT exceptions. This really shouldn't happen...

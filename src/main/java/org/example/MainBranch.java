@@ -116,16 +116,16 @@ public class MainBranch {
         // Iterating through the dictionary to search for the character
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            int n = -1;
+            int dictionaryIndex = -1;
             for (int j = 0; j < dictionary.length; j++) {
                 if (dictionary[j] == c) {
-                    n = j;
+                    dictionaryIndex = j;
                     break;
                 }
             }
             // If index found, encrypt it; else inform the user that characters is not accepted
-            if (n != -1) {
-                int encryptedIndex = (n + index) % dictionary.length;
+            if (dictionaryIndex != -1) {
+                int encryptedIndex = (dictionaryIndex + index) % dictionary.length;
                 char encryptedChar = dictionary[encryptedIndex];
                 encrypted[i] = encryptedChar;
             } else {
