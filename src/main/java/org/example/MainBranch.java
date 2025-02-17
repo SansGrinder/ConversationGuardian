@@ -237,7 +237,10 @@ public class MainBranch {
                 try {
                     document.save(outputFile+".pdf");
                 } catch (IOException e) {
-                    GUIs.msgPopUp("Oh No! The program failed to write your PDF!\nAn email will be sent to the developer along with the error logs. ","Unexpected Program Crash!","error");
+                    GUIs.msgPopUp("Oh No! The program failed to write your PDF!\n" +
+                            "An email will be sent to the developer along with the error logs. "
+                            ,"Unexpected Program Crash!","error"
+                    );
                     throw new FatalError(new RuntimeException(e));
                 }
                 JOptionPane.showMessageDialog(null, "PDF Encrypted Successfully!");
@@ -247,7 +250,10 @@ public class MainBranch {
             Runner.programEndedExpectedly=true;
             System.exit(0);
         } catch (IOException e){
-            GUIs.msgPopUp("Oh No! The program failed to write your PDF!\nAn email will be sent to the developer along with the error logs. ","Unexpected Program Crash!","error");
+            GUIs.msgPopUp("Oh No! The program failed to write your PDF!\n" +
+                    "An email will be sent to the developer along with the error logs. ",
+                    "Unexpected Program Crash!","error"
+            );
             throw new FatalError(e);
         }
     }

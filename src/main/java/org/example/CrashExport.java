@@ -6,7 +6,9 @@ import java.time.format.DateTimeFormatter;
 public class CrashExport {
     public static String formattedTime="";
     public static void generateCrashReport(int programRunState, FatalError e){
-        System.out.println("generateCrashReport has been called, with a programRunState of "+programRunState+" and the exception being "+e);
+        System.out.println("generateCrashReport has been called, with a programRunState of "
+                +programRunState+" and the exception being "+e
+        );
         String stackTrace;
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -22,15 +24,20 @@ public class CrashExport {
             case 6 -> "After decryption";
             default -> "Unable to fetch program run state";
         };
-        saveCrashLog(System.getProperty("user.home")+"/Downloads","Program run state: "+programRunPhase+"\nException:\n"+stackTrace);
+        saveCrashLog(System.getProperty("user.home")+
+                "/Downloads","Program run state: "+
+                programRunPhase+"\nException:\n"+stackTrace);
+
         CrashEmail email=new CrashEmail(
                 System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
                 "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
         );
+
         email.sendAnEmail();
     }
     public static void generateCrashReport(int programRunState, ExpectedException e){
-        System.out.println("generateCrashReport has been called, with a programRunState of "+programRunState+" and the exception being "+e);
+        System.out.println("generateCrashReport has been called, with a programRunState of "
+                +programRunState+" and the exception being "+e);
         String stackTrace;
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);

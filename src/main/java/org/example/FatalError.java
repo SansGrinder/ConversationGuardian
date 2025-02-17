@@ -22,7 +22,9 @@ public class FatalError extends Exception {
         };
         System.out.println(
                 "A fatal error was found during program execution process!\n"+
-                "    with a program run state of "+Runner.programRunProgress+" ("+programRunPhase+")\n"
+                "    with a program run state of "+
+                        Runner.programRunProgress+
+                        " ("+programRunPhase+")\n"
         );
         this.cause.printStackTrace();
     }

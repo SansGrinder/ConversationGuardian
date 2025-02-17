@@ -2,20 +2,33 @@ package org.example;
 import javax.swing.JOptionPane;
 public class GUIs { // Sorted by order of execution
     public static void programCrashed(FatalError e){
-        msgPopUp("The program has crashed due to an error!\nThis was not expected... An email will be sent to the developer. Let's hope he can fix the issue. ","Oh No...","error");
+        // For crashing with Unexpected Exceptions
+        msgPopUp("The program has crashed due to an error!\n" +
+                "This was not expected... An email will be sent to the developer. " +
+                "Let's hope he can fix the issue. ",
+                "Oh No...","error"
+        );
         CrashExport.generateCrashReport(Runner.programRunProgress,e);
         Runner.programEndedExpectedly = true;
         System.exit(0);
-    } // For crashing with Unexpected Exceptions
+    }
+
     public static void programCrashed(){
-        msgPopUp("Oh no! The program has crashed due to an unknown error!\nAn email will be sent to the developer, but he might still need to check your side...","Oh No...","error");
+        // For crashing WITHOUT exceptions. This really shouldn't happen...
+        msgPopUp("Oh no! The program has crashed due to an unknown error!\n" +
+                "An email will be sent to the developer, " +
+                "but he might still need to check your side...",
+                "Oh No...","error"
+        );
         Runner.programEndedExpectedly = true;
         System.exit(0);
-    } // For crashing WITHOUT exceptions. This really shouldn't happen...
+    }
+
     public static void expectedProgramCrash(ExpectedException e){
+        // For crashing with expected user-caused exceptions. No logs will be generated.
         CrashExport.generateCrashReport(Runner.programRunProgress, e);
         Runner.programEndedExpectedly = true;
-    } // For crashing with expected user-caused exceptions. No logs will be generated.
+    }
 
     // Below this point are JOptionPane "shortcut" methods
 
@@ -29,13 +42,21 @@ public class GUIs { // Sorted by order of execution
         }
     }
     public static int optionPopUp(String text, String title, String[] options){
-        return JOptionPane.showOptionDialog(null, text, title, JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, "");
+        return JOptionPane.showOptionDialog(null, text, title,
+                JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, ""
+        );
     }
     public static int optionPopUp(String text,String title){
-        return JOptionPane.showOptionDialog(null,text,title, JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,null,null,"");
+        return JOptionPane.showOptionDialog(null,text,title,
+                JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,
+                null,null,""
+        );
     }
     public static String textPopUp(String text, String title){
-        return JOptionPane.showInputDialog(null,text, title,JOptionPane.INFORMATION_MESSAGE);
+        return JOptionPane.showInputDialog(null,text,
+                title,JOptionPane.INFORMATION_MESSAGE
+        );
     }
     public static String textPopUp(String text, Object placeHolderText){
         return JOptionPane.showInputDialog(text,placeHolderText);
