@@ -216,18 +216,11 @@ public class MainBranch {
         return new String(decryptedArray);
     }
     private static void encryptPDF(String filePath, String password) throws Exception {
-        try (PDDocument document = Loader.loadPDF(new File(filePath))) {
-            AccessPermission ap = new AccessPermission();
-            ap.setCanPrint(false);
-            ap.setCanModifyAnnotations(false);
-            ap.setCanExtractContent(false);
-            ap.setCanModifyAnnotations(false);
-            ap.setCanFillInForm(false);
-            ap.setCanExtractForAccessibility(false);
-            ap.setCanAssembleDocument(true);
-
-            StandardProtectionPolicy spp = new StandardProtectionPolicy(password, password, ap);
+        try (PDDocument document = Loader.loadPDF(new File(filePath))) { // Try with resources
+            StandardProtectionPolicy spp = getStandardProtectionPolicy(password);
+            // Apply the spp policies
             document.protect(spp);
+            // Ask the user to select a directory to save to, throwing exceptions if needed
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Select a location to save to");
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -257,6 +250,21 @@ public class MainBranch {
             throw new FatalError(e);
         }
     }
+
+    private static StandardProtectionPolicy getStandardProtectionPolicy(String password) {
+        AccessPermission ap = new AccessPermission();
+        // Configure AP to make sure nothing could be done without password.
+        ap.setCanPrint(false);
+        ap.setCanModifyAnnotations(false);
+        ap.setCanExtractContent(false);
+        ap.setCanModifyAnnotations(false);
+        ap.setCanFillInForm(false);
+        ap.setCanExtractForAccessibility(false);
+        ap.setCanAssembleDocument(true);
+        // return as SPP
+        return new StandardProtectionPolicy(password, password, ap);
+    }
+
     private static void PDFBranch() throws Exception {
         Runner.programRunProgress=3;
         // 3 is for before PDF encryption

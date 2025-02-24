@@ -6,14 +6,17 @@ import java.time.format.DateTimeFormatter;
 public class CrashExport {
     public static String formattedTime="";
     public static void generateCrashReport(int programRunState, FatalError e){
+        // This line of print is for debugging
         System.out.println("generateCrashReport has been called, with a programRunState of "
                 +programRunState+" and the exception being "+e
         );
+        // This code chunk below collects the stack trace of the error
         String stackTrace;
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         stackTrace = sw.toString();
+        // Using switch case, convert programRunState into readable String
         String programRunPhase = switch (programRunState) {
             case 0 -> "Before mode selection";
             case 1 -> "Encryption";
@@ -24,25 +27,31 @@ public class CrashExport {
             case 6 -> "After decryption";
             default -> "Unable to fetch program run state";
         };
+        // Generates the crash log
         saveCrashLog(System.getProperty("user.home")+
                 "/Downloads","Program run state: "+
-                programRunPhase+"\nException:\n"+stackTrace);
-
+                programRunPhase+"\nException:\n"+stackTrace
+        );
+        // Building the email
         CrashEmail email=new CrashEmail(
                 System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
                 "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
         );
-
+        // Send the built email
         email.sendAnEmail();
     }
     public static void generateCrashReport(int programRunState, ExpectedException e){
         System.out.println("generateCrashReport has been called, with a programRunState of "
-                +programRunState+" and the exception being "+e);
+                +programRunState+" and the exception being "+e
+        ); // For Debugging
+
+        // Getting stack trace
         String stackTrace;
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         e.printStackTrace(pw);
         stackTrace = sw.toString();
+        // Translating program run state
         String programRunPhase = switch (programRunState) {
             case 0 -> "Before mode selection";
             case 1 -> "Encryption";
@@ -53,10 +62,12 @@ public class CrashExport {
             case 6 -> "After decryption";
             default -> "Unable to fetch program run state";
         };
+        // Building Email
         CrashEmail email=new CrashEmail(
                 System.getProperty("user.home").split("/")[2]+" got an "+e+"!",
                 "Program run state: "+programRunPhase+"\nException:\n"+stackTrace,false
         );
+        // Send the built email
         email.sendAnEmail();
     }
     private static void saveCrashLog(String filePath, String content) {
